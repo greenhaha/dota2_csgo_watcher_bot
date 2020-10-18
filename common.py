@@ -1,6 +1,6 @@
 import CSGO
 import DOTA2
-from DBOper import update_CSGO_match_ID
+from DBOper import update_CSGO_match_ID, update_DOTA2_match_ID
 from player import PLAYER_LIST
 
 
@@ -43,15 +43,14 @@ def update_and_send_message_CSGO():
 def update_DOTA2():
     result = {}
     for i in PLAYER_LIST:
-        match_info = DOTA2.get_last_match_by_short_steamID(i.long_steamID)
-        match_id = match_info['matchId']
-        if match_id != i.last_CSGO_match_ID:
+        match_id = DOTA2.get_last_match_id_by_short_steamID(i.short_steamID)
+        if match_id != i.last_DOTA2_match_ID:
             if result.get(match_id, 0) != 0:
                 result[match_id].append(i)
             else:
                 result.update({match_id, [i]})
             # 更新数据库的last_DOTA2_match_id字段
-            update_CSGO_match_ID(i.short_steamID, match_id)
+            update_DOTA2_match_ID(i.short_steamID, match_id)
 
     return result
 
@@ -61,7 +60,7 @@ def update_and_send_message_DOTA2():
     result = update_DOTA2()
     for match_id, players in result:
         if len(players) > 1:
-            DOTA2.generate_party_message(player_list=players)
+            DOTA2.generate_party_message(match_id=match_id, player_list=players)
         elif len(players) == 1:
-            DOTA2.generate_solo_message(player_obj=players[0])
+            DOTA2.generate_solo_message(match_id=match_id, player_obj=players[0])
 
