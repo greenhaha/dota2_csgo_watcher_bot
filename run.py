@@ -10,7 +10,7 @@ import DOTA2
 
 
 def init():
-    for nickname, short_steamID in json.load(open("list.json", encoding="utf-8")).items():
+    for nickname, short_steamID in json.load(open("list.json", "r")).items():
 
         long_steamID = steam_id_convert_32_to_64(short_steamID)
         last_CSGO_match_info = CSGO.get_last_match_by_long_steamID(long_steamID)

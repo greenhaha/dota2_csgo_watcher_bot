@@ -17,6 +17,7 @@ class player:
     dota2_assist = 0
     # 1为天辉, 2为夜魇
     dota2_team = 1
+    kda = 0
     gpm = 0
     xpm = 0
     hero = ''

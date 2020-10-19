@@ -56,13 +56,15 @@ def generate_party_message(match_id, player_list):
                 i.dota2_kill = j['kills']
                 i.dota2_death = j['deaths']
                 i.dota2_assist = j['assists']
-                i.kda = ((1. * i.kill + i.assist) / i.death) if i.death != 0 else (1. * i.kill + i.assist)
+                i.kda = ((1. * i.dota2_kill + i.dota2_assist) / i.dota2_death) \
+                    if i.dota2_death != 0 else (1. * i.dota2_kill + i.dota2_assist)
 
                 i.dota2_team = get_team_by_slot(j['player_slot'])
                 i.hero = j['hero_id']
                 i.last_hit = j['last_hits']
                 i.damage = j['hero_damage']
                 i.gpm = j['gold_per_min']
+                i.xpm = j['xp_per_min']
                 break
 
     # 队伍信息
@@ -134,8 +136,8 @@ def generate_party_message(match_id, player_list):
         hero = HEROES_LIST_CHINESE[i.hero] if i.hero in HEROES_LIST_CHINESE else '不知道什么鬼'
         kda = i.kda
         last_hits = i.last_hits
-        damage = i.hero_damage
-        kills, deaths, assists = i.kills, i.deaths, i.assists
+        damage = i.damage
+        kills, deaths, assists = i.dota2_kill, i.dota2_death, i.dota2_assist
         gpm, xpm = i.gpm, i.xpm
 
         damage_rate = 0 if team_damage == 0 else (100 * (float(damage) / team_damage))
@@ -173,14 +175,15 @@ def generate_solo_message(match_id, player_obj):
             player_obj.dota2_kill = j['kills']
             player_obj.dota2_death = j['deaths']
             player_obj.dota2_assist = j['assists']
-            player_obj.kda = ((1. * player_obj.kill + player_obj.assist) / player_obj.death)\
-                if player_obj.death != 0 else (1. * player_obj.kill + player_obj.assist)
+            player_obj.kda = ((1. * player_obj.dota2_kill + player_obj.dota2_assist) / player_obj.dota2_death)\
+                if player_obj.dota2_death != 0 else (1. * player_obj.dota2_kill + player_obj.dota2_assist)
 
             player_obj.dota2_team = get_team_by_slot(j['player_slot'])
             player_obj.hero = j['hero_id']
             player_obj.last_hit = j['last_hits']
             player_obj.damage = j['hero_damage']
             player_obj.gpm = j['gold_per_min']
+            player_obj.xpm = j['xp_per_min']
             break
 
     # 队伍信息
@@ -236,7 +239,7 @@ def generate_solo_message(match_id, player_obj):
     kda = player_obj.kda
     last_hits = player_obj.last_hits
     damage = player_obj.hero_damage
-    kills, deaths, assists = player_obj.kills, player_obj.deaths, player_obj.assists
+    kills, deaths, assists = player_obj.dota2_kill, player_obj.dota2_death, player_obj.dota2_assist
     gpm, xpm = player_obj.gpm, player_obj.xpm
 
     damage_rate = 0 if team_damage == 0 else (100 * (float(damage) / team_damage))
@@ -252,3 +255,6 @@ def generate_solo_message(match_id, player_obj):
 
     # print(print_str)
     message_sender.message(print_str)
+
+
+get_last_match_id_by_short_steamID(139136624)
