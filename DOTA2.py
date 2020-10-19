@@ -3,6 +3,7 @@ import json
 from DOTA2_dicts import *
 import random
 import time
+import message_sender
 api_key = "2B469C11A7D6FF2D0E97D2347FA1AF28"
 
 
@@ -146,7 +147,8 @@ def generate_party_message(match_id, player_list):
 
     print_str += "战绩详情: https://cn.dotabuff.com/matches/{}".format(match_id)
 
-    print(print_str)
+    # print(print_str)
+    message_sender.message(print_str)
 
 
 # 接收某局比赛的玩家信息, 生成单排战报
@@ -246,4 +248,5 @@ def generate_solo_message(match_id, player_obj):
 
     print_str += "战绩详情: https://cn.dotabuff.com/matches/{}".format(match_id)
 
-    print(print_str)
+    # print(print_str)
+    message_sender.message(print_str)

@@ -3,6 +3,7 @@ import hashlib
 import json
 import random
 from CSGO_dicts import *
+import message_sender
 
 
 def get_last_match_by_long_steamID(long_steamID):
@@ -98,7 +99,8 @@ def generate_party_message(player_list):
 
         print_str += "{}KDA: [{}/{}/{}], rating: {}\n" \
             .format(nickname, kills, deaths, assists, rating)
-    print(print_str)
+    # print(print_str)
+    message_sender.message(print_str)
 
 
 # 接收某局比赛的玩家信息, 生成单排战报
@@ -149,4 +151,6 @@ def generate_solo_message(player_obj):
     print_str += "{}KDA: [{}/{}/{}], rating: {}\n"\
         .format(player_obj.nickname, player_obj.csgo_kill,
                 player_obj.csgo_death, player_obj.csgo_assist, player_obj.csgo_rating)
-    print(print_str)
+
+    # print(print_str)
+    message_sender.message(print_str)
