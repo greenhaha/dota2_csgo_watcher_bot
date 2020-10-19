@@ -228,7 +228,7 @@ def generate_solo_message(match_id, player_obj):
     print_str += '游戏模式: [{}/{}]\n'.format(mode, lobby)
 
     nickname = player_obj.nickname
-    hero = HEROES_LIST_CHINESE[i.hero] if player_obj.hero in HEROES_LIST_CHINESE else '不知道什么鬼'
+    hero = HEROES_LIST_CHINESE[player_obj.hero] if player_obj.hero in HEROES_LIST_CHINESE else '不知道什么鬼'
     kda = player_obj.kda
     last_hits = player_obj.last_hits
     damage = player_obj.hero_damage

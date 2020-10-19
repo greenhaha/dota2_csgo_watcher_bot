@@ -25,12 +25,18 @@ class player:
     csgo_kill = 0
     csgo_death = 0
     csgo_assist = 0
+    csgo_rating = 0
     # team分为1和2
     csgo_team = 1
     csgo_win_team = 1
     # 比分
     csgo_team_1_score = 0
     csgo_team_2_score = 0
+    # 地图和模式
+    csgo_map = ''
+    csgo_mode = ''
+    # 时间
+    csgo_start_time = ''
 
     def __init__(self, nickname, short_steamID, long_steamID, last_CSGO_match_ID, last_DOTA2_match_ID):
         self.nickname = nickname
@@ -44,11 +50,14 @@ class player:
         self.csgo_kill = match_info['kill']
         self.csgo_death = match_info['death']
         self.csgo_assist = match_info['assist']
+        self.csgo_rating = match_info['rating']
         self.csgo_team = match_info['team']
-        self.csgo_win_team = match_info['win_team']
+        self.csgo_win_team = match_info['winTeam']
         self.csgo_team_1_score = match_info['score1']
         self.csgo_team_2_score = match_info['score2']
-
+        self.csgo_map = match_info['mapName']
+        self.csgo_mode = match_info['mode']
+        self.csgo_start_time = match_info['startTime']
 
 
 PLAYER_LIST = []

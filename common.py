@@ -18,12 +18,16 @@ def update_CSGO():
     result = {}
     for i in PLAYER_LIST:
         match_info = CSGO.get_last_match_by_long_steamID(i.long_steamID)
+        if match_info == -1:
+            continue
         match_id = match_info['matchId']
         if match_id != i.last_CSGO_match_ID:
+            # 把最新一局的比赛信息进行更新
+            i.csgo_data_set(match_info)
             if result.get(match_id, 0) != 0:
                 result[match_id].append(i)
             else:
-                result.update({match_id, [i]})
+                result.update({match_id: [i]})
             # 更新数据库的last_CSGO_match_id字段
             update_CSGO_match_ID(i.short_steamID, match_id)
 
@@ -33,11 +37,11 @@ def update_CSGO():
 def update_and_send_message_CSGO():
     # 格式: { match_id1: [player1, player2, player3], match_id2: [player1, player2]}
     result = update_CSGO()
-    for match_id, players in result:
-        if len(players) > 1:
-            CSGO.generate_party_message(player_list=players)
-        elif len(players) == 1:
-            CSGO.generate_solo_message(player_obj=players[0])
+    for match_id in result:
+        if len(result[match_id]) > 1:
+            CSGO.generate_party_message(player_list=result[match_id])
+        elif len(result[match_id]) == 1:
+            CSGO.generate_solo_message(player_obj=result[match_id][0])
 
 
 def update_DOTA2():
@@ -48,7 +52,7 @@ def update_DOTA2():
             if result.get(match_id, 0) != 0:
                 result[match_id].append(i)
             else:
-                result.update({match_id, [i]})
+                result.update({match_id: [i]})
             # 更新数据库的last_DOTA2_match_id字段
             update_DOTA2_match_ID(i.short_steamID, match_id)
 
@@ -58,9 +62,8 @@ def update_DOTA2():
 def update_and_send_message_DOTA2():
     # 格式: { match_id1: [player1, player2, player3], match_id2: [player1, player2]}
     result = update_DOTA2()
-    for match_id, players in result:
-        if len(players) > 1:
-            DOTA2.generate_party_message(match_id=match_id, player_list=players)
-        elif len(players) == 1:
-            DOTA2.generate_solo_message(match_id=match_id, player_obj=players[0])
-
+    for match_id in result:
+        if len(result[match_id]) > 1:
+            DOTA2.generate_party_message(match_id=match_id, player_list=result[match_id])
+        elif len(result[match_id]) == 1:
+            DOTA2.generate_solo_message(match_id=match_id, player_obj=result[match_id][0])
