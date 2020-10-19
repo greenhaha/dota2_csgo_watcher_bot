@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 import CSGO
 import DOTA2
 from DBOper import update_CSGO_match_ID, update_DOTA2_match_ID

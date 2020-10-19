@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
 import time
 from common import update_and_send_message_CSGO, update_and_send_message_DOTA2, steam_id_convert_32_to_64
 import json
