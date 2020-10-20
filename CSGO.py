@@ -8,6 +8,10 @@ from CSGO_dicts import *
 import message_sender
 
 
+class CSGOHTTPError(Exception):
+    pass
+
+
 def get_last_match_by_long_steamID(long_steamID):
     url = 'https://api.wmpvp.com/api/v2/home/validUser?sign='
     header = {
@@ -27,14 +31,20 @@ def get_last_match_by_long_steamID(long_steamID):
     payload = '{"gameAbbr":"CSGO","steamId":"' + str(long_steamID) + \
               '","accessToken":null,"lastTimeStamp":"","dataSource":0,"pageSize":1} '
     sign = hashlib.md5((payload + salt).encode("utf-8")).hexdigest()
-    r = json.loads(requests.post(url + sign, data=payload, headers=header).content)
-    if r['statusCode'] == 0:
-        match_info = r['data']
-        if len(match_info) < 3:
-            return -1
-        return match_info[2]['data'][0]
-    else:
-        return -1
+    response = requests.post(url + sign, data=payload, headers=header)
+    if response.status_code >= 400:
+        if response.status_code == 401:
+            raise CSGOHTTPError("Unauthorized request 401. Verify API key.")
+        if response.status_code == 503:
+            raise CSGOHTTPError("The server is busy or you exceeded limits. Please wait 30s and try again.")
+        raise CSGOHTTPError("Failed to retrieve data: %s. URL: %s" % (response.status_code, url))
+    r = json.loads(response.content)
+    try:
+        return r['data'][2]['data'][0]
+    except KeyError:
+        raise CSGOHTTPError("Response Error: Key Error")
+    except IndexError:
+        raise CSGOHTTPError("Response Error: Index Error")
 
 
 # 接收某局比赛的玩家列表, 生成开黑战报

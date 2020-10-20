@@ -19,8 +19,9 @@ def steam_id_convert_64_to_32(long_steamID):
 def update_CSGO():
     result = {}
     for i in PLAYER_LIST:
-        match_info = CSGO.get_last_match_by_long_steamID(i.long_steamID)
-        if match_info == -1:
+        try:
+            match_info = CSGO.get_last_match_by_long_steamID(i.long_steamID)
+        except CSGO.CSGOHTTPError:
             continue
         match_id = match_info['matchId']
         if match_id != i.last_CSGO_match_ID:
@@ -49,7 +50,10 @@ def update_and_send_message_CSGO():
 def update_DOTA2():
     result = {}
     for i in PLAYER_LIST:
-        match_id = DOTA2.get_last_match_id_by_short_steamID(i.short_steamID)
+        try:
+            match_id = DOTA2.get_last_match_id_by_short_steamID(i.short_steamID)
+        except DOTA2.DOTA2HTTPError:
+            continue
         if match_id != i.last_DOTA2_match_ID:
             if result.get(match_id, 0) != 0:
                 result[match_id].append(i)

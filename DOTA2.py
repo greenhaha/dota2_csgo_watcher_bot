@@ -6,7 +6,13 @@ from DOTA2_dicts import *
 import random
 import time
 import message_sender
+
 api_key = "2B469C11A7D6FF2D0E97D2347FA1AF28"
+
+
+# 异常处理
+class DOTA2HTTPError(Exception):
+    pass
 
 
 # 根据slot判断队伍, 返回1为天辉, 2为夜魇
@@ -21,7 +27,21 @@ def get_last_match_id_by_short_steamID(short_steamID):
     # get match_id
     url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v001/?key={}' \
           '&account_id={}&matches_requested=1'.format(api_key, short_steamID)
-    match_id = json.loads(requests.get(url).content)["result"]["matches"][0]["match_id"]
+    response = requests.get(url)
+    if response.status_code >= 400:
+        if response.status_code == 401:
+            raise DOTA2HTTPError("Unauthorized request 401. Verify API key.")
+        if response.status_code == 503:
+            raise DOTA2HTTPError("The server is busy or you exceeded limits. Please wait 30s and try again.")
+        raise DOTA2HTTPError("Failed to retrieve data: %s. URL: %s" % (response.status_code, url))
+
+    match = response.json()
+    try:
+        match_id = match["result"]["matches"][0]["match_id"]
+    except KeyError:
+        raise DOTA2HTTPError("Response Error: Key Error")
+    except IndexError:
+        raise DOTA2HTTPError("Response Error: Index Error")
     return match_id
 
 
@@ -29,7 +49,21 @@ def get_match_detail_info(match_id):
     # get match detail
     url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/' \
           '?key={}&match_id={}'.format(api_key, match_id)
-    match_info = json.loads(requests.get(url).content)["result"]
+    response = requests.get(url)
+    if response.status_code >= 400:
+        if response.status_code == 401:
+            raise DOTA2HTTPError("Unauthorized request 401. Verify API key.")
+        if response.status_code == 503:
+            raise DOTA2HTTPError("The server is busy or you exceeded limits. Please wait 30s and try again.")
+        raise DOTA2HTTPError("Failed to retrieve data: %s. URL: %s" % (response.status_code, url))
+
+    match = response.json()
+    try:
+        match_info = match["result"]
+    except KeyError:
+        raise DOTA2HTTPError("Response Error: Key Error")
+    except IndexError:
+        raise DOTA2HTTPError("Response Error: Index Error")
 
     return match_info
 
@@ -37,7 +71,11 @@ def get_match_detail_info(match_id):
 # 接收某局比赛的玩家列表, 生成开黑战报
 # 参数为玩家对象列表和比赛ID
 def generate_party_message(match_id, player_list):
-    match = get_match_detail_info(match_id=match_id)
+    try:
+        match = get_match_detail_info(match_id=match_id)
+    except DOTA2HTTPError:
+        message_sender.message("DOTA2开黑战报生成失败")
+        return
 
     # 比赛模式
     mode_id = match["game_mode"]
@@ -158,8 +196,11 @@ def generate_party_message(match_id, player_list):
 # 接收某局比赛的玩家信息, 生成单排战报
 # 参数为玩家对象
 def generate_solo_message(match_id, player_obj):
-    match = get_match_detail_info(match_id=match_id)
-
+    try:
+        match = get_match_detail_info(match_id=match_id)
+    except DOTA2HTTPError:
+        message_sender.message("DOTA2单排战报生成失败")
+        return
     # 比赛模式
     mode_id = match["game_mode"]
     if mode_id in (15, 19):  # 各种活动模式不通报
@@ -175,7 +216,7 @@ def generate_solo_message(match_id, player_obj):
             player_obj.dota2_kill = j['kills']
             player_obj.dota2_death = j['deaths']
             player_obj.dota2_assist = j['assists']
-            player_obj.kda = ((1. * player_obj.dota2_kill + player_obj.dota2_assist) / player_obj.dota2_death)\
+            player_obj.kda = ((1. * player_obj.dota2_kill + player_obj.dota2_assist) / player_obj.dota2_death) \
                 if player_obj.dota2_death != 0 else (1. * player_obj.dota2_kill + player_obj.dota2_assist)
 
             player_obj.dota2_team = get_team_by_slot(j['player_slot'])
