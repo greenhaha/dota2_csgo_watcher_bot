@@ -6,6 +6,7 @@ import json
 import random
 from CSGO_dicts import *
 import message_sender
+from player import player
 
 
 class CSGOHTTPError(Exception):
@@ -49,7 +50,7 @@ def get_last_match_by_long_steamID(long_steamID):
 
 # 接收某局比赛的玩家列表, 生成开黑战报
 # 参数为玩家对象列表
-def generate_party_message(player_list):
+def generate_party_message(player_list: [player]):
     player_num = len(player_list)
 
     # 队伍信息
@@ -117,7 +118,7 @@ def generate_party_message(player_list):
 
 # 接收某局比赛的玩家信息, 生成单排战报
 # 参数为玩家对象
-def generate_solo_message(player_obj):
+def generate_solo_message(player_obj: player):
     # 队伍信息
     team = player_obj.csgo_team
     win_team = player_obj.csgo_win_team

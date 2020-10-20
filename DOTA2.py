@@ -3,6 +3,7 @@
 import requests
 import json
 from DOTA2_dicts import *
+from player import player
 import random
 import time
 import message_sender
@@ -70,7 +71,7 @@ def get_match_detail_info(match_id):
 
 # 接收某局比赛的玩家列表, 生成开黑战报
 # 参数为玩家对象列表和比赛ID
-def generate_party_message(match_id, player_list):
+def generate_party_message(match_id, player_list: [player]):
     try:
         match = get_match_detail_info(match_id=match_id)
     except DOTA2HTTPError:
@@ -195,7 +196,7 @@ def generate_party_message(match_id, player_list):
 
 # 接收某局比赛的玩家信息, 生成单排战报
 # 参数为玩家对象
-def generate_solo_message(match_id, player_obj):
+def generate_solo_message(match_id, player_obj: player):
     try:
         match = get_match_detail_info(match_id=match_id)
     except DOTA2HTTPError:
@@ -278,8 +279,8 @@ def generate_solo_message(match_id, player_obj):
     nickname = player_obj.nickname
     hero = HEROES_LIST_CHINESE[player_obj.hero] if player_obj.hero in HEROES_LIST_CHINESE else '不知道什么鬼'
     kda = player_obj.kda
-    last_hits = player_obj.last_hits
-    damage = player_obj.hero_damage
+    last_hits = player_obj.last_hit
+    damage = player_obj.damage
     kills, deaths, assists = player_obj.dota2_kill, player_obj.dota2_death, player_obj.dota2_assist
     gpm, xpm = player_obj.gpm, player_obj.xpm
 
@@ -296,6 +297,3 @@ def generate_solo_message(match_id, player_obj):
 
     # print(print_str)
     message_sender.message(print_str)
-
-
-get_last_match_id_by_short_steamID(139136624)

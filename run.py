@@ -13,13 +13,17 @@ def init():
     for nickname, short_steamID in json.load(open("list.json", "r")).items():
 
         long_steamID = steam_id_convert_32_to_64(short_steamID)
-        last_CSGO_match_info = CSGO.get_last_match_by_long_steamID(long_steamID)
-        if last_CSGO_match_info != -1:
+        try:
+            last_CSGO_match_info = CSGO.get_last_match_by_long_steamID(long_steamID)
             last_CSGO_match_ID = last_CSGO_match_info["matchId"]
-        else:
+        except CSGO.CSGOHTTPError:  # 这人没打过CSGO
             last_CSGO_match_ID = "-1"
+            last_CSGO_match_info = "-1"
 
-        last_DOTA2_match_ID = DOTA2.get_last_match_id_by_short_steamID(short_steamID)
+        try:
+            last_DOTA2_match_ID = DOTA2.get_last_match_id_by_short_steamID(short_steamID)
+        except DOTA2.DOTA2HTTPError:
+            last_DOTA2_match_ID = "-1"
 
         # 如果数据库中没有这个人的信息, 则进行数据库插入
         if not is_player_stored(short_steamID):
@@ -35,8 +39,7 @@ def init():
                              nickname=nickname,
                              last_CSGO_match_ID=last_CSGO_match_ID,
                              last_DOTA2_match_ID=last_DOTA2_match_ID)
-
-        if last_CSGO_match_info != -1:
+        if last_CSGO_match_info != "-1":
             temp_player.csgo_data_set(last_CSGO_match_info)
 
         PLAYER_LIST.append(temp_player)
