@@ -39,7 +39,7 @@ def get_last_match_by_long_steamID(long_steamID):
         if response.status_code == 503:
             raise CSGOHTTPError("The server is busy or you exceeded limits. Please wait 30s and try again.")
         raise CSGOHTTPError("Failed to retrieve data: %s. URL: %s" % (response.status_code, url))
-    r = json.loads(response.content)
+    r = json.loads(response.content.decode("utf-8"))
     try:
         return r['data'][2]['data'][0]
     except KeyError:

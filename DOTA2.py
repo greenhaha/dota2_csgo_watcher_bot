@@ -174,7 +174,7 @@ def generate_party_message(match_id, player_list: [player]):
         nickname = i.nickname
         hero = HEROES_LIST_CHINESE[i.hero] if i.hero in HEROES_LIST_CHINESE else '不知道什么鬼'
         kda = i.kda
-        last_hits = i.last_hits
+        last_hits = i.last_hit
         damage = i.damage
         kills, deaths, assists = i.dota2_kill, i.dota2_death, i.dota2_assist
         gpm, xpm = i.gpm, i.xpm
