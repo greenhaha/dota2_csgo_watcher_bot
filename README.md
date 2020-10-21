@@ -9,6 +9,8 @@ CSGO的数据则来自于[完美官方APP](https://pvp.wanmei.com/appdownload-do
 
 YYGQ的文来自于[dota2_watcher](https://github.com/unilink233/dota2_watcher)
 
+有任何建议可以发issue, 随缘更新
+
 ## 安装指南
 
 - 下载对应版本的[miraiOK](https://github.com/LXY1226/MiraiOK)
