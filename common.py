@@ -33,6 +33,8 @@ def update_CSGO():
                 result.update({match_id: [i]})
             # 更新数据库的last_CSGO_match_id字段
             update_CSGO_match_ID(i.short_steamID, match_id)
+            # 更新列表
+            i.last_CSGO_match_ID = match_id
 
     return result
 
@@ -55,12 +57,15 @@ def update_DOTA2():
         except DOTA2.DOTA2HTTPError:
             continue
         if match_id != i.last_DOTA2_match_ID:
+
             if result.get(match_id, 0) != 0:
                 result[match_id].append(i)
             else:
                 result.update({match_id: [i]})
             # 更新数据库的last_DOTA2_match_id字段
             update_DOTA2_match_ID(i.short_steamID, match_id)
+            # 更新列表
+            i.last_DOTA2_match_ID = match_id
 
     return result
 
