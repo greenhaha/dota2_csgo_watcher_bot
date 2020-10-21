@@ -35,7 +35,6 @@ def update_CSGO():
             update_CSGO_match_ID(i.short_steamID, match_id)
             # 更新列表
             i.last_CSGO_match_ID = match_id
-
     return result
 
 
