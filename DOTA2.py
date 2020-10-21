@@ -8,7 +8,9 @@ import random
 import time
 import message_sender
 
-api_key = "2B469C11A7D6FF2D0E97D2347FA1AF28"
+# 这里替换成你自己的API
+# http://steamcommunity.com/dev/apikey
+api_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 
 # 异常处理

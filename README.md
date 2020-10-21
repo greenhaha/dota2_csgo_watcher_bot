@@ -25,6 +25,8 @@ YYGQ的文来自于[dota2_watcher](https://github.com/unilink233/dota2_watcher)
 
 - 修改`message_sender.py`中的BOT配置
 
+- 在[这里](http://steamcommunity.com/dev/apikey)申请你的steam API key, 修改`DOTA2.py`中的`api_key`
+
 - 运行`run.py`脚本来启动BOT
 
 - 走过路过点个star吧
