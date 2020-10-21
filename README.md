@@ -13,7 +13,7 @@ YYGQ的文来自于[dota2_watcher](https://github.com/unilink233/dota2_watcher)
 
 ## 安装指南
 
-- 下载对应版本的[miraiOK](https://github.com/LXY1226/MiraiOK)
+- 下载对应版本的[miraiOK](https://github.com/LXY1226/MiraiOK), 有hxd说下不动, 我传了个Linux64版本的[度盘](链接: https://pan.baidu.com/s/1bLYwWWHCcgmnLHoofXTHxQ) 提取码: 5trx 
 
 - 运行一下miraiOK, 然后关闭, 会自动生成一个`plugins`文件夹
 
